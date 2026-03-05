@@ -105,7 +105,7 @@ private val DarkColorScheme = darkColorScheme(
 // Theme Composable
 // ========================
 @Composable
-fun WeatherForecastTheme(
+fun ClimaTrackTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
@@ -153,7 +153,7 @@ fun WeatherForecastTheme(
 // ========================
 // Theme Accessor Extensions
 // ========================
-object WeatherTheme {
+object ClimaTrackTheme {
     val extendedColors: WeatherExtendedColors
         @Composable
         @ReadOnlyComposable

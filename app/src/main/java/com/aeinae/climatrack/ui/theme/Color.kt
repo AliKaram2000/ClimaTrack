@@ -81,7 +81,7 @@ val Chart5 = Color(0xFFCB8E2E)
 // ========================
 val BottomNavActive = Color(0xFFC47B3B)
 val BottomNavInactive = Color(0xFF717182)
-val BottomNavBackground = Color(0xFFFFFFFF)
+val BottomNavBackground = Color(0xFFF5F0EB)
 
 // ========================
 // Divider Colors

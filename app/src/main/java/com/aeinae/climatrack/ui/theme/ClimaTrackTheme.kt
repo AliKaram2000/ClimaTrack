@@ -100,7 +100,7 @@ val LightExtendedColors = WeatherExtendedColors(
     switchThumb = SwitchThumb,
 
     bottomNavActive = BottomNavActive,
-    bottomNavInactive = BottomNavInactive,
+    bottomNavInactive = NavyPrimaryLight,
     bottomNavBackground = BottomNavBackground,
 
     divider = Divider,
