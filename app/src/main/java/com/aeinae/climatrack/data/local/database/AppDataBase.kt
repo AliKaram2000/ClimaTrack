@@ -11,8 +11,9 @@ import com.aeinae.climatrack.data.local.database.entity.AlertEntity
 import com.aeinae.climatrack.data.local.database.entity.FavoriteEntity
 import com.aeinae.climatrack.data.local.database.entity.WeatherCacheEntity
 import com.aeinae.climatrack.utils.Constants.DATABASE_NAME
+import com.aeinae.climatrack.utils.Constants.DATABASE_VERSION
 
-@Database(entities = [WeatherCacheEntity::class, FavoriteEntity::class, AlertEntity::class], version = 1)
+@Database(entities = [WeatherCacheEntity::class, FavoriteEntity::class, AlertEntity::class], version = DATABASE_VERSION)
 abstract class AppDataBase(): RoomDatabase() {
 
     abstract fun weatherCacheDao(): WeatherCacheDao
