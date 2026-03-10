@@ -35,7 +35,7 @@ interface OpenWeatherMapService {
     ): Response<List<GeocodingResponseDto>>
 
     @GET("geo/1.0/direct")
-    suspend fun searchCity(
+    suspend fun getCity(
         @Query("q") cityName: String,
         @Query("limit") limit: Int = 5,
         @Query("appid") apiKey: String,
