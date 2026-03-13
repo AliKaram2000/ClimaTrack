@@ -4,19 +4,19 @@ import com.google.gson.annotations.SerializedName
 
 data class GeocodingResponseDto(
     @SerializedName("name")
-    val name: String,
+    val name: String?,
 
     @SerializedName("local_names")
     val localNames: Map<String, String>? = null,
 
     @SerializedName("lat")
-    val lat: Double,
+    val lat: Double?,
 
     @SerializedName("lon")
-    val lon: Double,
+    val lon: Double?,
 
     @SerializedName("country")
-    val country: String,
+    val country: String?,
 
     @SerializedName("state")
     val state: String? = null,

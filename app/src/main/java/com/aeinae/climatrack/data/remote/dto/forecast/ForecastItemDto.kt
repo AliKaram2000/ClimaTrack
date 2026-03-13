@@ -11,26 +11,26 @@ data class ForecastItemDto(
     val dt: Long,
 
     @SerializedName("main")
-    val main: MainDto,
+    val main: MainDto?,
 
     @SerializedName("weather")
-    val weather: List<WeatherConditionDto>,
+    val weather: List<WeatherConditionDto>?,
 
     @SerializedName("clouds")
-    val clouds: CloudsDto,
+    val clouds: CloudsDto?,
 
     @SerializedName("wind")
-    val wind: WindDto,
+    val wind: WindDto?,
 
     @SerializedName("visibility")
-    val visibility: Int,
+    val visibility: Int?,
 
     @SerializedName("pop")
-    val pop: Double,
+    val pop: Double?,
 
     @SerializedName("sys")
-    val sys: ForecastSysDto,
+    val sys: ForecastSysDto?,
 
     @SerializedName("dt_txt")
-    val dtTxt: String,
+    val dtTxt: String?,
 )

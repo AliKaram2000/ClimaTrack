@@ -10,11 +10,11 @@ data class CurrentSysDto(
     val id: Int? = null,
 
     @SerializedName("country")
-    val country: String,
+    val country: String?,
 
     @SerializedName("sunrise")
-    val sunrise: Long,
+    val sunrise: Long?,
 
     @SerializedName("sunset")
-    val sunset: Long,
+    val sunset: Long?,
 )
