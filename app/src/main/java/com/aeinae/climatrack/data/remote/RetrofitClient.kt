@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
 
-class RetrofitClient {
+object RetrofitClient {
 
     val retrofitClient = Retrofit.Builder()
                                     .baseUrl(BASE_URL)

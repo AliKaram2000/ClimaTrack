@@ -4,10 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.aeinae.climatrack.screens.AlertsScreen
-import com.aeinae.climatrack.screens.FavouriteScreen
-import com.aeinae.climatrack.screens.HomeScreen
-import com.aeinae.climatrack.screens.SettingsScreen
+import com.aeinae.climatrack.views.AlertsScreen
+import com.aeinae.climatrack.views.FavouriteScreen
+import com.aeinae.climatrack.views.HomeScreen
+import com.aeinae.climatrack.views.SettingsScreen
 import androidx.compose.ui.Modifier
 
 @Composable
