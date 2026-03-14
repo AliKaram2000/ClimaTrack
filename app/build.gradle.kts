@@ -13,6 +13,7 @@ android {
     defaultConfig {
         applicationId = "com.aeinae.climatrack"
         minSdk = 31
+        //noinspection OldTargetApi
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -38,6 +39,15 @@ android {
     }
     buildFeatures {
         compose = true
+    }
+    packaging {
+        resources {
+            // This line fixes the specific error you are seeing
+            excludes += "/META-INF/versions/9/OSGI-INF/MANIFEST.MF"
+
+            // Optional: If you run into similar issues with other META-INF files,
+            // you can use wildcards, but the specific path above is safest for now.
+        }
     }
 }
 

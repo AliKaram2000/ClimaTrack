@@ -13,8 +13,8 @@ import com.aeinae.climatrack.data.local.database.entity.WeatherCacheEntity
 import com.aeinae.climatrack.utils.Constants.DATABASE_NAME
 import com.aeinae.climatrack.utils.Constants.DATABASE_VERSION
 
-@Database(entities = [WeatherCacheEntity::class, FavoriteEntity::class, AlertEntity::class], version = DATABASE_VERSION)
-abstract class AppDataBase(): RoomDatabase() {
+@Database(entities = [WeatherCacheEntity::class, FavoriteEntity::class, AlertEntity::class], version = DATABASE_VERSION, exportSchema = false)
+abstract class AppDataBase: RoomDatabase() {
 
     abstract fun weatherCacheDao(): WeatherCacheDao
     abstract fun favoriteDao(): FavoriteDao
@@ -30,7 +30,7 @@ abstract class AppDataBase(): RoomDatabase() {
                     context.applicationContext,
                     AppDataBase::class.java,
                     DATABASE_NAME)
-                    .fallbackToDestructiveMigration()
+                    .fallbackToDestructiveMigration(dropAllTables = true)
                     .build()
                 INSTANCE = instance
                 instance
