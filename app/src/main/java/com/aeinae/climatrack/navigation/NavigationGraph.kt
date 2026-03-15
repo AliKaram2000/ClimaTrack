@@ -6,7 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.aeinae.climatrack.views.AlertsScreen
 import com.aeinae.climatrack.views.FavouriteScreen
-import com.aeinae.climatrack.views.HomeScreen
+import com.aeinae.climatrack.views.home.HomeScreen
 import com.aeinae.climatrack.views.SettingsScreen
 import androidx.compose.ui.Modifier
 
@@ -14,7 +14,8 @@ import androidx.compose.ui.Modifier
 fun NavigationHost(modifier: Modifier, navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = BottomNavItem.Home.route
+        startDestination = BottomNavItem.Home.route,
+        modifier = modifier
     ) {
         composable(BottomNavItem.Home.route) { HomeScreen() }
         composable(BottomNavItem.Favourites.route) { FavouriteScreen() }
