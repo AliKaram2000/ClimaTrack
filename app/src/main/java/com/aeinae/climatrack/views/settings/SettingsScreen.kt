@@ -82,12 +82,14 @@ fun SettingsScreen(onNavigateToMapPicker: () -> Unit) {
                     onNavigateToMapPicker()
                 }
             },
+            onNavigateToMapPicker = onNavigateToMapPicker,
             onTempUnitChange = viewModel::setTempUnit,
             onWindUnitChange = viewModel::setWindUnit,
             onLanguageChange = viewModel::setLanguage
         )
     }
 }
+
 
 
 
@@ -111,6 +113,7 @@ private fun LoadingContent() {
 private fun LoadedContent(
     state: SettingsUiState.Loaded,
     onLocationModeChange: (String) -> Unit,
+    onNavigateToMapPicker: () -> Unit,
     onTempUnitChange: (String) -> Unit,
     onWindUnitChange: (String) -> Unit,
     onLanguageChange: (String) -> Unit
@@ -136,10 +139,10 @@ private fun LoadedContent(
         SettingSectionLabel("Location")
         Spacer(modifier = Modifier.height(dimens.spacing8))
         SettingsCard {
-            RadioGroup(
-                options = locationOptions,
-                selectedValue = state.locationMode,
-                onSelect = onLocationModeChange
+            LocationSelector(
+                selectedMode = state.locationMode,
+                onModeChange = onLocationModeChange,
+                onMapPickerClick = onNavigateToMapPicker
             )
         }
 
@@ -182,7 +185,6 @@ private fun LoadedContent(
 
         Spacer(modifier = Modifier.height(dimens.spacing24))
 
-        // ── Language ──
         SettingSectionLabel("Language")
         Spacer(modifier = Modifier.height(dimens.spacing8))
         SettingsCard {
@@ -191,6 +193,59 @@ private fun LoadedContent(
                 selectedValue = state.language,
                 onSelect = onLanguageChange
             )
+        }
+    }
+}
+
+
+
+@Composable
+private fun LocationSelector(
+    selectedMode: String,
+    onModeChange: (String) -> Unit,
+    onMapPickerClick: () -> Unit
+) {
+    val dimens = ClimaTrackTheme.dimens
+    val extendedColors = ClimaTrackTheme.extendedColors
+    val isMapMode = selectedMode == Constants.LocationMode.MAP
+
+    Column {
+        locationOptions.forEach { option ->
+            val isSelected = option.value == selectedMode
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onModeChange(option.value) }
+                    .padding(vertical = dimens.spacing8),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                RadioButton(
+                    selected = isSelected,
+                    onClick = null,
+                    colors = RadioButtonDefaults.colors(
+                        selectedColor = MaterialTheme.colorScheme.primary,
+                        unselectedColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
+                    )
+                )
+                Text(
+                    text = option.label,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = if (isSelected) MaterialTheme.colorScheme.onSurface
+                    else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                )
+            }
+
+            if (option.value == Constants.LocationMode.MAP && isMapMode) {
+                Text(
+                    text = "Select on Map",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = extendedColors.accent,
+                    modifier = Modifier
+                        .padding(start = 48.dp, bottom = dimens.spacing4)
+                        .clickable { onMapPickerClick() }
+                )
+            }
         }
     }
 }
@@ -289,7 +344,6 @@ private fun SegmentedSelector(
         options.forEachIndexed { index, option ->
             val isSelected = option.value == selectedValue
 
-            // Vertical divider between segments
             if (index > 0) {
                 Box(
                     modifier = Modifier
