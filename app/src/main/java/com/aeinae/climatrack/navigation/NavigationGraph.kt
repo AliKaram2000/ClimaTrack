@@ -8,7 +8,7 @@ import androidx.navigation.compose.composable
 import com.aeinae.climatrack.views.AlertsScreen
 import com.aeinae.climatrack.views.favourites.FavoritesScreen
 import com.aeinae.climatrack.views.home.HomeScreen
-import com.aeinae.climatrack.views.SettingsScreen
+import com.aeinae.climatrack.views.settings.SettingsScreen
 import androidx.compose.ui.Modifier
 
 @Composable
@@ -24,6 +24,8 @@ fun NavigationHost(modifier: Modifier, navController: NavHostController) {
             onAddClick = {Log.d("NavigationHost", "onAddClick")}
         ) }
         composable(BottomNavItem.Alerts.route) { AlertsScreen() }
-        composable(BottomNavItem.Settings.route) { SettingsScreen() }
+        composable(BottomNavItem.Settings.route) { SettingsScreen(
+            onNavigateToMapPicker = { Log.d("NavigationHost", "onNavigateToMapPicker") }
+        ) }
     }
 }
