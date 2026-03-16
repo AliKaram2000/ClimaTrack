@@ -19,6 +19,10 @@ class FavoriteRepository(
         favoriteDao.insertFavorite(favorite)
     }
 
+    suspend fun getFavorite(favID: Int): FavoriteEntity?{
+        return favoriteDao.getFavorite(favID)
+    }
+
     suspend fun deleteFavorite(favorite: FavoriteEntity) {
         favoriteDao.delete(favorite)
         weatherLocalDataSource.deleteCachedWeather(Constants.favoriteCacheKey(favorite.id))

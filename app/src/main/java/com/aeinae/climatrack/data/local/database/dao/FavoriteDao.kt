@@ -15,6 +15,9 @@ interface FavoriteDao {
     @Query("SELECT * FROM favorites")
     fun getAllFavorites(): Flow<List<FavoriteEntity>>
 
+    @Query("SELECT * FROM favorites WHERE id = :id")
+    suspend fun getFavorite(id: Int): FavoriteEntity?
+
     @Delete
     suspend fun delete(favorite: FavoriteEntity)
 

@@ -1,61 +1,37 @@
-package com.aeinae.climatrack.views.home
+package com.aeinae.climatrack.views.favourites.details
 
-import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
 import com.aeinae.climatrack.app.ClimaTrackApplication
-import com.aeinae.climatrack.domain.models.CurrentWeather
-import com.aeinae.climatrack.domain.models.DailyForecast
-import com.aeinae.climatrack.domain.models.HourlyForecast
 import com.aeinae.climatrack.ui.theme.ClimaTrackTheme
-import com.aeinae.climatrack.utils.Constants
-import com.aeinae.climatrack.utils.DateTimeUtils
 import com.aeinae.climatrack.views.components.CacheBanner
 import com.aeinae.climatrack.views.components.DailyForecastList
 import com.aeinae.climatrack.views.components.HourlyForecastRow
@@ -65,77 +41,66 @@ import com.aeinae.climatrack.views.components.SectionHeader
 import com.aeinae.climatrack.views.components.WeatherDetailsSection
 import com.aeinae.climatrack.views.components.tempSuffix
 import com.aeinae.climatrack.views.components.windSuffix
-import kotlin.math.roundToInt
-
-
-private fun requestLocationPermissions(
-    launcher: androidx.activity.result.ActivityResultLauncher<Array<String>>
-) {
-    launcher.launch(
-        arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        )
-    )
-}
-
-private fun hasLocationPermission(context: Context): Boolean {
-    return ContextCompat.checkSelfPermission(
-        context, Manifest.permission.ACCESS_FINE_LOCATION
-    ) == PackageManager.PERMISSION_GRANTED ||
-            ContextCompat.checkSelfPermission(
-                context, Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-}
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun FavoriteDetailScreen(
+    favoriteId: Int,
+    onBack: () -> Unit
+) {
     val context = LocalContext.current
     val application = context.applicationContext as ClimaTrackApplication
-    val viewModel: HomeViewModel = viewModel(factory = HomeViewModel.factory(application))
+    val viewModel: FavoriteDetailViewModel = viewModel(
+        factory = FavoriteDetailViewModel.factory(favoriteId, application)
+    )
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        val granted = permissions.values.any { it }
-        if (granted) viewModel.refresh()
-    }
+    Column(modifier = Modifier.fillMaxSize()) {
+        // Fixed back button — always visible regardless of state
+        BackRow(onBack = onBack)
 
-    LaunchedEffect(Unit) {
-        if (viewModel.requiresGpsPermission() && !hasLocationPermission(context)) {
-            requestLocationPermissions(permissionLauncher)
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = { viewModel.refresh() },
+            modifier = Modifier.fillMaxSize()
+        ) {
+            when (val state = uiState) {
+                is FavoriteDetailUiState.Loading -> LoadingContent()
+
+                is FavoriteDetailUiState.Success -> SuccessContent(
+                    state = state,
+                    modifier = Modifier.fillMaxSize()
+                )
+
+                is FavoriteDetailUiState.Error -> ErrorContent(
+                    message = state.message,
+                    onRetry = { viewModel.refresh() }
+                )
+            }
         }
     }
+}
 
-    PullToRefreshBox(
-        isRefreshing = isRefreshing,
-        onRefresh = { viewModel.refresh() },
-        modifier = Modifier.fillMaxSize()
+
+@Composable
+private fun BackRow(onBack: () -> Unit) {
+    val dimens = ClimaTrackTheme.dimens
+
+    IconButton(
+        onClick = onBack,
+        modifier = Modifier.padding(
+            start = dimens.spacing4,
+            top = dimens.spacing8
+        )
     ) {
-        when (val state = uiState) {
-            is HomeUiState.Loading -> LoadingContent()
-
-            is HomeUiState.Success -> SuccessContent(
-                state = state,
-                modifier = Modifier.fillMaxSize()
-            )
-
-            is HomeUiState.Error -> ErrorContent(
-                message = state.message,
-                onRetry = {
-                    if (viewModel.requiresGpsPermission() && !hasLocationPermission(context)) {
-                        requestLocationPermissions(permissionLauncher)
-                    } else {
-                        viewModel.refresh()
-                    }
-                }
-            )
-        }
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+            contentDescription = "Back",
+            tint = MaterialTheme.colorScheme.onSurface
+        )
     }
 }
 
@@ -209,7 +174,7 @@ private fun ErrorContent(message: String, onRetry: () -> Unit) {
 
 @Composable
 private fun SuccessContent(
-    state: HomeUiState.Success,
+    state: FavoriteDetailUiState.Success,
     modifier: Modifier = Modifier
 ) {
     val dimens = ClimaTrackTheme.dimens
@@ -221,7 +186,7 @@ private fun SuccessContent(
         modifier = modifier
             .verticalScroll(scrollState)
             .padding(horizontal = dimens.spacing16)
-            .padding(top = dimens.spacing24, bottom = dimens.spacing32)
+            .padding(bottom = dimens.spacing32)
     ) {
         if (state.isFromCache) {
             CacheBanner(lastUpdated = state.lastUpdated)
