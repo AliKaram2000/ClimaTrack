@@ -8,7 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface OpenWeatherMapService {
-    @GET("weather")
+    @GET("data/2.5/weather")
     suspend fun getCurrentWeather(
         @Query("lat") latitude: Double,
         @Query("lon") longitude: Double,
@@ -17,7 +17,7 @@ interface OpenWeatherMapService {
         @Query("lang") language: String? = null,
         ): Response<CurrentWeatherResponse>
 
-    @GET("forecast")
+    @GET("data/2.5/forecast")
     suspend fun getForecast(
         @Query("lat") latitude: Double,
         @Query("lon") longitude: Double,

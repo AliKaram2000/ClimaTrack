@@ -6,18 +6,18 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.aeinae.climatrack.navigation.BottomNavItem
 import com.aeinae.climatrack.navigation.BottomNavigationBar
 import com.aeinae.climatrack.navigation.NavigationHost
-import com.aeinae.climatrack.ui.theme.*
+import com.aeinae.climatrack.ui.theme.ClimaTrackTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,11 +29,31 @@ class MainActivity : ComponentActivity() {
         setContent {
             ClimaTrackTheme {
                 val navController = rememberNavController()
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry?.destination?.route
+
+                val showBottomBar = currentRoute in listOf(
+                    BottomNavItem.Home.route,
+                    BottomNavItem.Favourites.route,
+                    BottomNavItem.Alerts.route,
+                    BottomNavItem.Settings.route
+                )
+
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    bottomBar = {BottomNavigationBar(navController = navController, enabled = true)}
-                    ) { innerPadding ->
-                    MainScreen(modifier = Modifier.padding(innerPadding), navController = navController)
+                    bottomBar = {
+                        if (showBottomBar) {
+                            BottomNavigationBar(
+                                navController = navController,
+                                enabled = true
+                            )
+                        }
+                    }
+                ) { innerPadding ->
+                    MainScreen(
+                        modifier = Modifier.padding(innerPadding),
+                        navController = navController
+                    )
                 }
             }
         }
@@ -44,4 +64,3 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(modifier: Modifier = Modifier, navController: NavHostController) {
     NavigationHost(modifier = modifier, navController = navController)
 }
-
