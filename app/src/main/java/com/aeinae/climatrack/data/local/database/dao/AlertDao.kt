@@ -19,7 +19,7 @@ interface AlertDao {
     fun getAllAlerts(): Flow<List<AlertEntity>>
 
     @Delete
-    suspend fun delete(favorite: FavoriteEntity)
+    suspend fun delete(alert: AlertEntity)
 
 
 

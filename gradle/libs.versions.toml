@@ -20,6 +20,11 @@ kotlinSerializationJson = "1.7.3"
 play-services-location = "21.3.0"
 coil = "2.6.0"
 mapbox = "11.9.0"
+mockk = "1.13.17"
+coroutinesTest = "1.10.2"
+turbine = "1.2.0"
+roomTesting = "2.8.4"
+archCoreTesting = "2.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -54,6 +59,11 @@ lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-ru
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 mapbox-android = { group = "com.mapbox.maps", name = "android", version.ref = "mapbox" }
 mapbox-compose = { group = "com.mapbox.extension", name = "maps-compose", version.ref = "mapbox" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
+turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+arch-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "archCoreTesting" }
+room-testing = { group = "androidx.room", name = "room-testing", version.ref = "roomTesting" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
