@@ -1,3 +1,11 @@
+import java.util.Properties
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
+}
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -19,6 +27,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "MAPBOX_PUBLIC_TOKEN", "\"${localProperties["MAPBOX_PUBLIC_TOKEN"]}\"")
+        buildConfigField("String", "MAPBOX_SECRET_TOKEN", "\"${localProperties["MAPBOX_SECRET_TOKEN"]}\"")
+        resValue("string", "mapbox_access_token", "${localProperties["MAPBOX_PUBLIC_TOKEN"]}")
     }
 
     buildTypes {
@@ -39,20 +51,16 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     packaging {
         resources {
-            // This line fixes the specific error you are seeing
             excludes += "/META-INF/versions/9/OSGI-INF/MANIFEST.MF"
-
-            // Optional: If you run into similar issues with other META-INF files,
-            // you can use wildcards, but the specific path above is safest for now.
         }
     }
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -71,12 +79,15 @@ dependencies {
     implementation(libs.logging.interceptor)
     implementation(libs.gson)
     implementation(libs.datastore.preferences)
-    implementation(libs.kotlinx.serialization.json)
     implementation(libs.datastore)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.play.services.location)
     implementation(libs.lifecycle.runtime.compose)
     implementation(libs.coil.compose)
+    implementation(libs.mapbox.android)
+    implementation(libs.mapbox.compose)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
