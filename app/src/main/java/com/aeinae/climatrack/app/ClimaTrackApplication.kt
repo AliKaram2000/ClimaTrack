@@ -5,6 +5,7 @@ import com.aeinae.climatrack.data.local.database.AppDataBase
 import com.aeinae.climatrack.data.local.preferences.SettingsPreferences
 import com.aeinae.climatrack.data.location.LocationService
 import com.aeinae.climatrack.data.remote.RetrofitClient
+import com.aeinae.climatrack.data.repository.AlertRepository
 import com.aeinae.climatrack.data.repository.FavoriteRepository
 import com.aeinae.climatrack.data.repository.GeocodingRepository
 import com.aeinae.climatrack.data.repository.SettingsRepository
@@ -25,6 +26,8 @@ class ClimaTrackApplication: Application() {
     private val weatherCacheDao by lazy { database.weatherCacheDao() }
 
     private val favoriteDao by lazy { database.favoriteDao() }
+
+    private val alertDao by lazy { database.alertDao() }
 
     val settingsPreferences by lazy { SettingsPreferences(this) }
 
@@ -48,6 +51,10 @@ class ClimaTrackApplication: Application() {
 
     val settingsRepository by lazy {
         SettingsRepository(settingsPreferences)
+    }
+
+    val alertRepository by lazy {
+        AlertRepository(alertDao)
     }
 
     val locationService by lazy { LocationService(this) }

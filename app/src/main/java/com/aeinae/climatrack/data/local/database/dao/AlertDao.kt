@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.aeinae.climatrack.data.local.database.entity.AlertEntity
-import com.aeinae.climatrack.data.local.database.entity.FavoriteEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -21,6 +20,10 @@ interface AlertDao {
     @Delete
     suspend fun delete(alert: AlertEntity)
 
+    @Query("UPDATE alerts SET isEnabled = :isEnabled WHERE id = :alertID")
+    suspend fun update(alertID: Int, isEnabled: Boolean)
 
+    @Query("SELECT * FROM alerts WHERE isEnabled = 1 AND endTime > :currentTime")
+    suspend fun getActiveAlerts(currentTime: Long): List<AlertEntity>
 
 }
